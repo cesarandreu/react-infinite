@@ -1,4 +1,3 @@
-    _isArray = require('lodash.isarray'),
 var React = require('react'),
     _isFinite = require('lodash.isfinite'),
     ConstantInfiniteComputer = require('./computers/constant_infinite_computer.js'),
@@ -84,7 +83,7 @@ var Infinite = React.createClass({
 
     if (_isFinite(data)) {
       computer = new ConstantInfiniteComputer(data, numberOfChildren);
-    } else if (_isArray(data)) {
+    } else if (Array.isArray(data)) {
       computer = new ArrayInfiniteComputer(data, numberOfChildren);
     } else {
       throw new Error('You must provide either a number or an array of numbers as the elementHeight prop.');
@@ -134,7 +133,7 @@ var Infinite = React.createClass({
   },
 
   componentWillMount() {
-    if (_isArray(this.props.elementHeight)) {
+    if (Array.isArray(this.props.elementHeight)) {
       if (React.Children.count(this.props.children) !== this.props.elementHeight.length) {
         throw new Error('There must be as many values provided in the elementHeight prop as there are children.');
       }
