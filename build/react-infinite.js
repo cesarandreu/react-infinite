@@ -1,5 +1,4 @@
-var React = global.React || require('react'),
-    _isArray = require('lodash.isarray'),
+var React = require('react'),
     _isFinite = require('lodash.isfinite'),
     ConstantInfiniteComputer = require('./computers/constant_infinite_computer.js'),
     ArrayInfiniteComputer = require('./computers/array_infinite_computer.js');
@@ -84,10 +83,10 @@ var Infinite = React.createClass({displayName: "Infinite",
 
     if (_isFinite(data)) {
       computer = new ConstantInfiniteComputer(data, numberOfChildren);
-    } else if (_isArray(data)) {
+    } else if (Array.isArray(data)) {
       computer = new ArrayInfiniteComputer(data, numberOfChildren);
     } else {
-      throw new Error("You must provide either a number or an array of numbers as the elementHeight prop.");
+      throw new Error('You must provide either a number or an array of numbers as the elementHeight prop.');
     }
 
     return computer;
@@ -116,27 +115,27 @@ var Infinite = React.createClass({displayName: "Infinite",
   },
 
   getPreloadBatchSizeFromProps:function(props) {
-    return props.preloadBatchSize ?
+    return typeof props.preloadBatchSize === 'number' ?
       props.preloadBatchSize :
       props.containerHeight / 2;
   },
 
   getPreloadAdditionalHeightFromProps:function(props) {
-    return props.preloadAdditionalHeight ?
+    return typeof props.preloadAdditionalHeight === 'number' ?
       props.preloadAdditionalHeight :
       props.containerHeight;
   },
 
-  componentDidUpdate:function(prevProps, prevState) {
+  componentDidUpdate:function(prevProps) {
     if (React.Children.count(this.props.children) !== React.Children.count(prevProps.children)) {
       this.setStateFromScrollTop(this.getScrollTop());
     }
   },
 
   componentWillMount:function() {
-    if (_isArray(this.props.elementHeight)) {
+    if (Array.isArray(this.props.elementHeight)) {
       if (React.Children.count(this.props.children) !== this.props.elementHeight.length) {
-        throw new Error("There must be as many values provided in the elementHeight prop as there are children.")
+        throw new Error('There must be as many values provided in the elementHeight prop as there are children.');
       }
     }
   },
@@ -151,12 +150,12 @@ var Infinite = React.createClass({displayName: "Infinite",
   // The window is the block with any preloadAdditionalHeight
   // added to it.
   setStateFromScrollTop:function(scrollTop) {
-    var blockNumber = Math.floor(scrollTop / this.state.preloadBatchSize),
+    var blockNumber = this.state.preloadBatchSize === 0 ? 0 : Math.floor(scrollTop / this.state.preloadBatchSize),
         blockStart = this.state.preloadBatchSize * blockNumber,
         blockEnd = blockStart + this.state.preloadBatchSize,
         windowTop = Math.max(0, blockStart - this.state.preloadAdditionalHeight),
         windowBottom = Math.min(this.state.infiniteComputer.getTotalScrollableHeight(),
-                        blockEnd + this.state.preloadAdditionalHeight)
+                        blockEnd + this.state.preloadAdditionalHeight);
     this.setState({
       displayIndexStart: this.state.infiniteComputer.getDisplayIndexStart(windowTop),
       displayIndexEnd: this.state.infiniteComputer.getDisplayIndexEnd(windowBottom)
@@ -185,7 +184,7 @@ var Infinite = React.createClass({displayName: "Infinite",
           that.setState({
             isScrolling: false,
             scrollTimeout: undefined
-          })
+          });
         }, this.props.timeScrollStateLastsForAfterUserScrolls);
 
     this.setState({
@@ -221,7 +220,7 @@ var Infinite = React.createClass({displayName: "Infinite",
   buildHeightStyle:function(height) {
     return {
       width: '100%',
-      height: Math.ceil(height) + 'px'
+      height: Math.ceil(height)
     };
   },
 
@@ -258,4 +257,3 @@ var Infinite = React.createClass({displayName: "Infinite",
 });
 
 module.exports = Infinite;
-global.Infinite = Infinite;
