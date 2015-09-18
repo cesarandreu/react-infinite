@@ -141,7 +141,7 @@ var Infinite = React.createClass({displayName: "Infinite",
   },
 
   getScrollTop:function() {
-    return this.refs.scrollable.getDOMNode().scrollTop;
+    return this.refs.scrollable.scrollTop;
   },
 
   // Given the scrollTop of the container, computes the state the
@@ -163,11 +163,11 @@ var Infinite = React.createClass({displayName: "Infinite",
   },
 
   infiniteHandleScroll:function(e) {
-    if (e.target !== this.refs.scrollable.getDOMNode()) {
+    if (e.target !== this.refs.scrollable) {
       return;
     }
 
-    this.props.handleScroll(this.refs.scrollable.getDOMNode());
+    this.props.handleScroll(this.refs.scrollable);
     this.handleScroll(e.target.scrollTop);
   },
 
