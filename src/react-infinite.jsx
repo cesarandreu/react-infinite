@@ -1,5 +1,5 @@
-var React = global.React || require('react'),
     _isArray = require('lodash.isarray'),
+var React = require('react'),
     _isFinite = require('lodash.isfinite'),
     ConstantInfiniteComputer = require('./computers/constant_infinite_computer.js'),
     ArrayInfiniteComputer = require('./computers/array_infinite_computer.js');
@@ -258,4 +258,3 @@ var Infinite = React.createClass({
 });
 
 module.exports = Infinite;
-global.Infinite = Infinite;
